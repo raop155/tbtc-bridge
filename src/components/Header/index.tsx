@@ -9,7 +9,7 @@ import { balanceAtom, isWalletConnectedAtom } from '@/store/store';
 
 const Header = () => {
   const changeWallet = useChangeWallet();
-  const { provider, evmChainId, signer, signerAddress, wallet } = useEVMWallet(CHAIN_ID_ETH);
+  const { wallet, evmChainId } = useEVMWallet(CHAIN_ID_ETH);
 
   const [isWalletConnected, setIsWalletConnected] = useAtom(isWalletConnectedAtom);
   const [, setWalletBalance] = useAtom(balanceAtom);
@@ -20,8 +20,6 @@ const Header = () => {
 
   useEffect(() => {
     if (!wallet || !evmChainId) return;
-
-    console.log({ wallet, evmChainId });
 
     const getWalletInformation = async () => {
       const address = wallet.getAddress();
