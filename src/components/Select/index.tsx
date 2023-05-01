@@ -1,23 +1,24 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Dispatch } from 'react';
 import { Listbox } from '@headlessui/react';
 import { FaChevronDown } from 'react-icons/fa';
 
 type Props = {
   items: { id: string | number; name: string; disabled: boolean }[];
   label?: string;
+  value: any;
+  setValue: Dispatch<any>;
 };
 
-const Select = ({ items, label }: Props) => {
-  const [selectedPerson, setSelectedPerson] = useState(items[0] || '');
-
+const Select = ({ items, value, setValue, label }: Props) => {
   return (
-    <Listbox value={selectedPerson} onChange={setSelectedPerson}>
+    <Listbox value={value} onChange={setValue}>
       {label && <Listbox.Label>{label}</Listbox.Label>}
       <div className='relative'>
         <Listbox.Button className='flex items-center justify-center w-full gap-2 px-4 py-2 mb-1 text-black bg-white rounded'>
-          {selectedPerson.name} <FaChevronDown />
+          {value.name} <FaChevronDown />
         </Listbox.Button>
-        <Listbox.Options className='absolute w-full overflow-hidden text-black bg-white rounded shadow-xs'>
+        <Listbox.Options className='absolute w-full overflow-hidden text-black bg-white rounded shadow-2xl top-13'>
           {items?.length > 0 &&
             items.map((item) => {
               const { id, name, disabled } = item;

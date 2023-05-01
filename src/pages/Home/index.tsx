@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ThresholdIcon from '@/assets/icons/threshold.svg';
 import Select from '@/components/Select';
+import StepContainer from '@/components/StepContainer';
 import { balanceAtom, isWalletConnectedAtom } from '@/store/store';
 import { useAtom } from 'jotai';
+import { useState } from 'react';
 
 const items = [
   { id: 1, name: 'Ethereum', disabled: false },
@@ -13,6 +16,10 @@ const items = [
 const Home = () => {
   const [walletBalance] = useAtom(balanceAtom);
   const [isWalletConnected] = useAtom(isWalletConnectedAtom);
+  const [selectedSourceChain, setSelectedSourceChain] = useState<any>(items[0]);
+  const [selectedTargetChain, setSelectedTargetChain] = useState<any>(items[1]);
+  const sourceChains = items.filter((item) => item.id !== selectedTargetChain.id);
+  const targetChains = items.filter((item) => item.id !== selectedSourceChain.id);
 
   return (
     <div className='flex justify-center flex-1 h-full '>
@@ -34,15 +41,39 @@ const Home = () => {
           <div className='p-2 bg-gray-500 rounded'>Few other EVM chains</div>
         </div>
 
-        <div className='flex gap-4 p-4 mb-4 border border-gray-500 rounded'>
-          <div className='w-[50%]'>
-            <Select label='From' items={items} />
+        <StepContainer title='1. Source Chain' className='z-[20]'>
+          <div className='w-full '>
+            <Select
+              label='From'
+              items={sourceChains}
+              value={selectedSourceChain}
+              setValue={setSelectedSourceChain}
+            />
           </div>
+        </StepContainer>
 
-          <div className='w-[50%]'>
-            <Select label='To' items={items} />
+        <StepContainer title='2. Target Chain' className='z-[19]'>
+          <div className='w-full'>
+            <Select
+              label='To'
+              items={targetChains}
+              value={selectedTargetChain}
+              setValue={setSelectedTargetChain}
+            />
           </div>
-        </div>
+        </StepContainer>
+
+        <StepContainer title='*. Attest Token'>
+          <div className='w-full'>Attest Token & Create Token</div>
+        </StepContainer>
+
+        <StepContainer title='3. Send Tokens'>
+          <div className='w-full'>Send Tokens</div>
+        </StepContainer>
+
+        <StepContainer title='4. Redeem Tokens'>
+          <div className='w-full'>Redeem Tokens</div>
+        </StepContainer>
 
         {isWalletConnected && <div>Balance: {walletBalance}</div>}
       </div>

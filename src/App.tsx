@@ -1,15 +1,12 @@
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-
+import { Navigation } from './navigation';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import Home from './pages/Home';
 
 function App() {
   return (
     <>
       <Header />
-      <Home />
+      <Navigation />
       <Footer />
     </>
   );
