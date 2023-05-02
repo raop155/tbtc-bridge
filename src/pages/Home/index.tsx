@@ -1,22 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  CHAIN_ID_ETH,
+  CHAIN_ID_POLYGON,
+  CHAIN_ID_ARBITRUM,
+  CHAIN_ID_OPTIMISM,
+  CHAIN_ID_BSC,
+} from '@certusone/wormhole-sdk';
 import ThresholdIcon from '@/assets/icons/threshold.svg';
 import StepContainer from '@/components/StepContainer';
-import { balanceAtom, isWalletConnectedAtom } from '@/store/store';
-import { useAtom } from 'jotai';
 import { useState } from 'react';
 import SourceStep from './SourceStep';
 import TargetStep from './TargetStep';
 
+import TransferStep from './TransferStep';
+
 const items = [
-  { id: 1, name: 'Ethereum', disabled: false },
-  { id: 2, name: 'Polygon', disabled: false },
-  { id: 3, name: 'Arbitrum', disabled: false },
-  { id: 4, name: 'Optimism', disabled: false },
+  { id: CHAIN_ID_BSC, name: 'Binance Smart Chain', disabled: false },
+  { id: CHAIN_ID_ETH, name: 'Ethereum', disabled: false },
+  { id: CHAIN_ID_POLYGON, name: 'Polygon', disabled: false },
+  { id: CHAIN_ID_ARBITRUM, name: 'Arbitrum', disabled: false },
+  { id: CHAIN_ID_OPTIMISM, name: 'Optimism', disabled: false },
 ];
 
 const Home = () => {
-  const [walletBalance] = useAtom(balanceAtom);
-  const [isWalletConnected] = useAtom(isWalletConnectedAtom);
   const [selectedSourceChain, setSelectedSourceChain] = useState<any>(items[0]);
   const [selectedTargetChain, setSelectedTargetChain] = useState<any>(items[1]);
   const sourceChains = items.filter((item) => item.id !== selectedTargetChain.id);
@@ -42,7 +48,7 @@ const Home = () => {
           <div className='p-2 bg-gray-500 rounded'>Few other EVM chains</div>
         </div>
 
-        <StepContainer title='1. Source Chain' className='z-[20]'>
+        <StepContainer title='1. Source Chain' className='z-[50]'>
           <SourceStep
             sourceChains={sourceChains}
             selectedSourceChain={selectedSourceChain}
@@ -50,7 +56,7 @@ const Home = () => {
           />
         </StepContainer>
 
-        <StepContainer title='2. Target Chain' className='z-[19]'>
+        <StepContainer title='2. Target Chain' className='z-[45]'>
           <TargetStep
             targetChains={targetChains}
             selectedTargetChain={selectedTargetChain}
@@ -63,14 +69,12 @@ const Home = () => {
         </StepContainer>
 
         <StepContainer title='3. Send Tokens'>
-          <div className='w-full'>Send Tokens</div>
+          <TransferStep />
         </StepContainer>
 
         <StepContainer title='4. Redeem Tokens'>
           <div className='w-full'>Redeem Tokens</div>
         </StepContainer>
-
-        {isWalletConnected && <div>Balance: {walletBalance}</div>}
       </div>
     </div>
   );

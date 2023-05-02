@@ -4,11 +4,15 @@ import Select from '@/components/Select';
 import Button from '@/components/Button';
 import { useChangeWallet, useWalletsForChain } from '@xlabs-libs/wallet-aggregator-react';
 import { useEVMWallet } from '@/hooks/useEVMWallet';
-import { useAtom } from 'jotai';
-import { balanceAtom } from '@/store/store';
-import { CHAIN_ID_POLYGON } from '@certusone/wormhole-sdk';
 import { getEvmChainId } from '@/consts';
 import { EVMWallet } from '@xlabs-libs/wallet-aggregator-evm';
+import { Wallet } from '@xlabs-libs/wallet-aggregator-core';
+import { ethers, BigNumber, Contract } from 'ethers';
+import { ERC20_ABI } from '@/ABI/ERC20';
+import { convertToNumber } from '@/utils/utils';
+import { getDefaultNativeCurrencySymbol } from '@/consts';
+import { useAtom } from 'jotai';
+import { targetWalletAtom } from '@/store/store';
 
 type Props = {
   targetChains: {
@@ -21,37 +25,34 @@ type Props = {
 };
 
 const TargetStep = ({ targetChains, selectedTargetChain, setSelectedTargetChain }: Props) => {
+  const WH_CHAIN_ID = selectedTargetChain.id;
   const changeWallet = useChangeWallet();
-  const { wallet, evmChainId } = useEVMWallet(CHAIN_ID_POLYGON);
+  const { wallet, provider, evmChainId, signer, signerAddress } = useEVMWallet(WH_CHAIN_ID);
 
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
-  const [, setWalletBalance] = useAtom(balanceAtom);
+  const [walletBalance, setWalletBalance] = useState<number | undefined>(undefined);
   const [walletAddress, setWalletAddress] = useState<string | undefined>(undefined);
+  const [, setSourceWallet] = useAtom(targetWalletAtom);
 
-  const walletsForChain = useWalletsForChain(CHAIN_ID_POLYGON);
-  const croppedAddress = `${walletAddress?.slice(0, 5) || ''}...${walletAddress?.slice(-4) || ''}`;
+  const walletsForChain = useWalletsForChain(WH_CHAIN_ID);
+  // const croppedAddress = `${walletAddress?.slice(0, 5) || ''}...${walletAddress?.slice(-4) || ''}`;
 
   useEffect(() => {
     if (!wallet) return;
-
-    const getWalletInformation = async () => {
-      const address = wallet.getAddress();
-      const balance = await wallet.getBalance();
-      setWalletAddress(address);
-      setWalletBalance(+balance);
-    };
-
-    getWalletInformation();
-  }, [wallet, setWalletBalance]);
+    console.log('target cambia wallet!');
+    setSourceWallet({ WH_CHAIN_ID, walletAddress, provider, signer, signerAddress });
+  }, [wallet, provider, walletAddress, signer, WH_CHAIN_ID, setSourceWallet, signerAddress]);
 
   const connectWallet = async () => {
     const currentWallet = walletsForChain[0];
     await currentWallet.connect();
     changeWallet(currentWallet);
 
-    if (evmChainId !== getEvmChainId(CHAIN_ID_POLYGON)) {
-      await (currentWallet as EVMWallet)?.switchChain(Number(getEvmChainId(CHAIN_ID_POLYGON)));
-    }
+    // const currentEVMChainId: number = currentWallet?.getNetworkInfo()?.chainId || evmChainId;
+    // if (currentEVMChainId !== getEvmChainId(WH_CHAIN_ID)) {
+    //   await (currentWallet as EVMWallet)?.switchChain(Number(getEvmChainId(WH_CHAIN_ID)));
+    // }
+    getWalletInformation(currentWallet);
     setIsWalletConnected(true);
   };
 
@@ -60,26 +61,43 @@ const TargetStep = ({ targetChains, selectedTargetChain, setSelectedTargetChain 
     setIsWalletConnected(false);
   };
 
-  return (
-    <div className='flex items-center justify-between w-full gap-4'>
-      <Select
-        label='To'
-        items={targetChains}
-        value={selectedTargetChain}
-        setValue={setSelectedTargetChain}
-      />
+  const getWalletInformation = async (wallet: Wallet | EVMWallet) => {
+    console.log('getWalletInformation');
+    const address = wallet.getAddress();
+    const balance = await wallet.getBalance();
+    const formattedBalance = ethers.utils.formatEther(balance);
+    setWalletAddress(address);
+    setWalletBalance(+formattedBalance);
+  };
 
-      <Button
-        text={isWalletConnected ? `Disconnect: ${croppedAddress}` : 'Connect Wallet'}
-        className='self-end'
-        onClick={async () => {
-          if (isWalletConnected) {
-            disconnectWallet();
-          } else {
-            connectWallet();
-          }
-        }}
-      />
+  return (
+    <div className='flex flex-col w-full gap-4'>
+      <div className='flex items-center justify-between w-full gap-4'>
+        <Select
+          label='To'
+          items={targetChains}
+          value={selectedTargetChain}
+          setValue={setSelectedTargetChain}
+        />
+
+        {/* <Button
+          text={isWalletConnected ? `Disconnect: ${croppedAddress}` : 'Connect Wallet'}
+          className='self-end'
+          style='purple'
+          onClick={async () => {
+            if (isWalletConnected) {
+              disconnectWallet();
+            } else {
+              connectWallet();
+            }
+          }}
+        /> */}
+      </div>
+      {isWalletConnected && walletBalance && (
+        <div>
+          Balance: {walletBalance} {getDefaultNativeCurrencySymbol(WH_CHAIN_ID)}
+        </div>
+      )}
     </div>
   );
 };
