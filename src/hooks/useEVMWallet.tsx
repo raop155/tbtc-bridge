@@ -14,7 +14,7 @@ interface IEthereumContext {
   signer: Signer;
   signerAddress: string | undefined;
   wallet: EVMWallet | undefined;
-  isSwitchingNetwork: boolean;
+  switchNetwork: (currentEvmChainId: number | undefined) => void;
 }
 
 export const useEVMWallet = (chainId: ChainId): IEthereumContext => {
@@ -23,13 +23,11 @@ export const useEVMWallet = (chainId: ChainId): IEthereumContext => {
   const [evmChainId, setEvmChainId] = useState<number | undefined>();
   const [signer, setSigner] = useState<ethers.Signer | undefined>();
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | undefined>();
-  const [isSwitchingNetwork, setIsSwitchingNetwork] = useState<boolean>(false);
 
   const switchNetwork = useCallback(
     (currentEvmChainId: number | undefined) => {
       if (!currentEvmChainId) return;
       const newEvmChainId = wallet?.getNetworkInfo()?.chainId;
-
       if (currentEvmChainId !== newEvmChainId) wallet?.switchChain(Number(newEvmChainId));
       setEvmChainId(newEvmChainId);
     },
@@ -45,9 +43,7 @@ export const useEVMWallet = (chainId: ChainId): IEthereumContext => {
     setProvider(wallet?.getProvider());
 
     const handleNetworkChange = async () => {
-      setIsSwitchingNetwork(true);
       switchNetwork(evmChainId);
-      setIsSwitchingNetwork(false);
     };
 
     wallet?.on('networkChanged', handleNetworkChange);
@@ -63,8 +59,8 @@ export const useEVMWallet = (chainId: ChainId): IEthereumContext => {
       signer,
       signerAddress,
       wallet,
-      isSwitchingNetwork,
+      switchNetwork,
     }),
-    [provider, evmChainId, signer, signerAddress, wallet, isSwitchingNetwork],
+    [provider, evmChainId, signer, signerAddress, wallet, switchNetwork],
   );
 };

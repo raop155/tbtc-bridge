@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import ThresholdIcon from '@/assets/icons/threshold.svg';
-import Select from '@/components/Select';
 import StepContainer from '@/components/StepContainer';
 import { balanceAtom, isWalletConnectedAtom } from '@/store/store';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
+import SourceStep from './SourceStep';
+import TargetStep from './TargetStep';
 
 const items = [
   { id: 1, name: 'Ethereum', disabled: false },
@@ -42,25 +43,19 @@ const Home = () => {
         </div>
 
         <StepContainer title='1. Source Chain' className='z-[20]'>
-          <div className='w-full '>
-            <Select
-              label='From'
-              items={sourceChains}
-              value={selectedSourceChain}
-              setValue={setSelectedSourceChain}
-            />
-          </div>
+          <SourceStep
+            sourceChains={sourceChains}
+            selectedSourceChain={selectedSourceChain}
+            setSelectedSourceChain={setSelectedSourceChain}
+          />
         </StepContainer>
 
         <StepContainer title='2. Target Chain' className='z-[19]'>
-          <div className='w-full'>
-            <Select
-              label='To'
-              items={targetChains}
-              value={selectedTargetChain}
-              setValue={setSelectedTargetChain}
-            />
-          </div>
+          <TargetStep
+            targetChains={targetChains}
+            selectedTargetChain={selectedTargetChain}
+            setSelectedTargetChain={setSelectedTargetChain}
+          />
         </StepContainer>
 
         <StepContainer title='*. Attest Token'>
