@@ -48,6 +48,7 @@ const TargetStep = ({ targetChains, selectedTargetChain, setSelectedTargetChain 
     await currentWallet.connect();
     changeWallet(currentWallet);
 
+    // TODO: NECESITAMOS TENER EL WALLET DE ORIGEN
     // const currentEVMChainId: number = currentWallet?.getNetworkInfo()?.chainId || evmChainId;
     // if (currentEVMChainId !== getEvmChainId(WH_CHAIN_ID)) {
     //   await (currentWallet as EVMWallet)?.switchChain(Number(getEvmChainId(WH_CHAIN_ID)));

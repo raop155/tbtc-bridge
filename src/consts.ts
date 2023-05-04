@@ -69,3 +69,9 @@ export const WORMHOLE_RPC_HOSTS =
     : CLUSTER === 'TESTNET'
     ? ['https://wormhole-v2-testnet-api.certus.one']
     : ['http://localhost:7071'];
+
+export const THRESHOLD_GATEWAYS: any = {
+  [CHAIN_ID_POLYGON]: CLUSTER === 'MAINNET' ? '' : '0xc3D46e0266d95215589DE639cC4E93b79f88fc6C',
+  [CHAIN_ID_OPTIMISM]: CLUSTER === 'MAINNET' ? '' : '0xc3D46e0266d95215589DE639cC4E93b79f88fc6C',
+  [CHAIN_ID_ARBITRUM]: CLUSTER === 'MAINNET' ? '' : '0xBcD7917282E529BAA6f232DdDc75F3901245A492',
+};
