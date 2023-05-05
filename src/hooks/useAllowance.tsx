@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getTokenBridgeAddressForChain } from '@/consts';
+import { getTokenBridgeAddressForChain, THRESHOLD_GATEWAYS } from '@/consts';
 import {
   approveEth,
   ChainId,
@@ -16,6 +16,7 @@ export default function useAllowance(
   transferAmount?: bigint,
   sourceIsNative = false,
   signer?: any,
+  isThreshold = false,
 ) {
   const [isApproveProcessing, setIsApproveProcessing] = useState(false);
   const [isAllowanceFetching, setIsAllowanceFetching] = useState(false);
@@ -25,7 +26,7 @@ export default function useAllowance(
     sourceIsNative ||
     (allowance && transferAmount && allowance >= transferAmount);
 
-  console.log({ allowance, transferAmount, sufficientAllowance });
+  console.log({ chainId, allowance, transferAmount, sufficientAllowance });
 
   useEffect(() => {
     let cancelled = false;
@@ -33,7 +34,11 @@ export default function useAllowance(
     if (isEVMChain(chainId) && tokenAddress && signer && !isApproveProcessing) {
       console.log('entro 2');
       setIsAllowanceFetching(true);
-      getAllowanceEth(getTokenBridgeAddressForChain(chainId), tokenAddress, signer).then(
+      const contractAddress = isThreshold
+        ? THRESHOLD_GATEWAYS[chainId]
+        : getTokenBridgeAddressForChain(chainId);
+      console.log('allowance contractAddress', contractAddress);
+      getAllowanceEth(contractAddress, tokenAddress, signer).then(
         (result) => {
           if (!cancelled) {
             setIsAllowanceFetching(false);
@@ -53,7 +58,7 @@ export default function useAllowance(
     return () => {
       cancelled = true;
     };
-  }, [chainId, tokenAddress, signer, isApproveProcessing]);
+  }, [chainId, tokenAddress, signer, isApproveProcessing, isThreshold]);
 
   const approveAmount: (amount: bigint) => Promise<any> = useMemo(() => {
     return !isEVMChain(chainId) || !tokenAddress || !signer
@@ -65,10 +70,16 @@ export default function useAllowance(
           // Klaytn requires specifying gasPrice
           const gasPricePromise =
             chainId === CHAIN_ID_KLAYTN ? signer.getGasPrice() : Promise.resolve(undefined);
+
+          const contractAddress = isThreshold
+            ? THRESHOLD_GATEWAYS[chainId]
+            : getTokenBridgeAddressForChain(chainId);
+          console.log('allowance contractAddress', contractAddress);
+
           return gasPricePromise.then(
             (gasPrice: any) =>
               approveEth(
-                getTokenBridgeAddressForChain(chainId),
+                contractAddress,
                 tokenAddress,
                 signer,
                 BigNumber.from(amount),
@@ -89,7 +100,7 @@ export default function useAllowance(
             },
           );
         };
-  }, [chainId, tokenAddress, signer]);
+  }, [chainId, tokenAddress, signer, isThreshold]);
 
   return useMemo(
     () => ({

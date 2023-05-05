@@ -4,9 +4,8 @@ import {
   CHAIN_ID_POLYGON,
   CHAIN_ID_ARBITRUM,
   CHAIN_ID_OPTIMISM,
-  CHAIN_ID_BSC,
+  // CHAIN_ID_BSC,
 } from '@certusone/wormhole-sdk';
-import ThresholdIcon from '@/assets/icons/threshold.svg';
 import StepContainer from '@/components/StepContainer';
 import { useState } from 'react';
 import SourceStep from './SourceStep';
@@ -61,7 +60,7 @@ const Home = () => {
           </StepContainer>
 
           <StepContainer title='*. Attest Token'>
-            <div className='w-full'>Attest Token & Create Token</div>
+            <div className='w-full'>Attest Token & Create Token {'{getForeignAssetEth()}'}</div>
           </StepContainer>
 
           <StepContainer title='*. Allowance'>
