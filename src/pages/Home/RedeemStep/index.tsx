@@ -89,7 +89,7 @@ const RedeemStep = () => {
 
       const tx = await L2WormholeGateway.receiveTbtc(
         hexToUint8Array(signedVAA),
-        { gasLimit: 500000 }, // TODO: how to calculate this
+        { gasLimit: 5000000 }, // TODO: how to calculate this
       );
 
       const receipt = await tx.wait();

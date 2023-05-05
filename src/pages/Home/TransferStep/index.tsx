@@ -36,9 +36,11 @@ const TransferStep = () => {
   const { WH_CHAIN_ID: sourceChainId } = sourceWallet || {};
   const useThreshold = Boolean(sourceChainId !== CHAIN_ID_ETH);
   const tokenAddress = THRESHOLD_TBTC_CONTRACTS[sourceChainId];
-  const amount = useThreshold ? 0.000015 : 0.000001;
+  const amount = useThreshold ? 0.000001 : 0.000015;
   const decimals = 18;
   const amountParsed = parseUnits(String(amount), decimals);
+
+  console.log('MONTOS:', { sourceChainId, useThreshold, amount });
 
   // const startTransferNoNative = async () => {
   //   console.log('startTransferGateway');
@@ -192,7 +194,7 @@ const TransferStep = () => {
         zeroPad(arrayify(targetAddress), 32),
         0,
         1,
-        { gasLimit: 500000 }, // TODO: how to calculate this
+        { gasLimit: 5000000 }, // TODO: how to calculate this
       );
 
       const receipt = await tx.wait();

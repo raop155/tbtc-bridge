@@ -30,14 +30,13 @@ export default function useAllowance(
 
   useEffect(() => {
     let cancelled = false;
-    console.log('entro');
     if (isEVMChain(chainId) && tokenAddress && signer && !isApproveProcessing) {
-      console.log('entro 2');
       setIsAllowanceFetching(true);
       const contractAddress = isThreshold
         ? THRESHOLD_GATEWAYS[chainId]
         : getTokenBridgeAddressForChain(chainId);
       console.log('allowance contractAddress', contractAddress);
+      console.log('allowance tokenAddress', tokenAddress);
       getAllowanceEth(contractAddress, tokenAddress, signer).then(
         (result) => {
           if (!cancelled) {
@@ -75,6 +74,7 @@ export default function useAllowance(
             ? THRESHOLD_GATEWAYS[chainId]
             : getTokenBridgeAddressForChain(chainId);
           console.log('allowance contractAddress', contractAddress);
+          console.log('allowance tokenAddress', tokenAddress);
 
           return gasPricePromise.then(
             (gasPrice: any) =>

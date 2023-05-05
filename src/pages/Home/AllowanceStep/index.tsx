@@ -11,7 +11,7 @@ const AllowanceStep = () => {
   const [sourceWallet] = useAtom(sourceWalletAtom);
   const { WH_CHAIN_ID: sourceChainId, signer } = sourceWallet || {};
   const useThreshold = Boolean(sourceChainId !== CHAIN_ID_ETH);
-  const amount = useThreshold ? 0.000015 : 0.000001;
+  const amount = useThreshold ? 0.000001 : 0.000015;
   const decimals = 18;
   const amountParsed = parseUnits(String(amount), decimals);
   const tokenAddress = THRESHOLD_TBTC_CONTRACTS[sourceChainId];
