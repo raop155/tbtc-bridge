@@ -20,7 +20,6 @@ import {
   hexToUint8Array,
   parseSequenceFromLogEth,
   transferFromEth,
-  // transferFromEthNative,
   uint8ArrayToHex,
 } from '@certusone/wormhole-sdk';
 import { useAtom } from 'jotai';
@@ -30,7 +29,6 @@ import { ThresholdL2WormholeGateway } from '@/ABI/ThresholdL2WormholeGateway';
 
 const TransferStep = () => {
   const [sourceWallet] = useAtom(sourceWalletAtom);
-  // const [sourceToken] = useAtom(sourceTokenAtom);
   const [targetWallet] = useAtom(targetWalletAtom);
   const [, setSignedVaaHex] = useAtom(signedVaaHexAtom);
   const { WH_CHAIN_ID: sourceChainId } = sourceWallet || {};
@@ -40,65 +38,8 @@ const TransferStep = () => {
   const decimals = 18;
   const amountParsed = parseUnits(String(amount), decimals);
 
-  console.log('MONTOS:', { sourceChainId, useThreshold, amount });
-
-  // const startTransferNoNative = async () => {
-  //   console.log('startTransferGateway');
-
-  //   const { WH_CHAIN_ID: sourceChainId, signer, walletAddress: sourceWalletAddress } = sourceWallet;
-  //   const { WH_CHAIN_ID: targetChainId, walletAddress: targetWalletAddress } = targetWallet;
-  //   if (!signer) return;
-  //   try {
-  //     console.log('0');
-
-  //     const tokenBridgeAddress = getTokenBridgeAddressForChain(sourceChainId);
-  //     const relayerFee = 0;
-  //     const relayerFeeParsed = parseUnits(String(relayerFee), decimals);
-  //     const payload = sourceWalletAddress; // TODO: Cambiar por `targetWalletAddress`
-  //     const targetAddress = sourceWalletAddress; // TODO: Cambiar por `THRESHOLD_GATEWAYS`
-
-  //     const receipt = await transferFromEth(
-  //       tokenBridgeAddress,
-  //       signer,
-  //       tokenAddress,
-  //       amountParsed,
-  //       targetChainId,
-  //       zeroPad(arrayify(targetAddress), 32),
-  //       relayerFeeParsed,
-  //       {},
-  //     );
-
-  //     console.log({ receipt });
-
-  //     const sequence = parseSequenceFromLogEth(receipt, getBridgeAddressForChain(sourceChainId));
-  //     const emitterAddress = getEmitterAddressEth(getTokenBridgeAddressForChain(sourceChainId));
-
-  //     console.log({ sequence, emitterAddress });
-
-  //     const { vaaBytes, isPending } = await getSignedVAAWithRetry(
-  //       sourceChainId,
-  //       emitterAddress,
-  //       sequence,
-  //     );
-
-  //     if (vaaBytes !== undefined) {
-  //       console.log('uint8ArrayToHex(vaaBytes)', uint8ArrayToHex(vaaBytes));
-  //       setSignedVaaHex(uint8ArrayToHex(vaaBytes));
-  //       console.log({ isPending });
-  //       console.log('Fetched Signed VAA');
-  //     } else if (isPending) {
-  //       console.log({ isPending });
-  //       console.log('VAA is Pending');
-  //     } else {
-  //       throw new Error('Error retrieving VAA info');
-  //     }
-  //   } catch (e) {
-  //     console.log(parseError(e));
-  //   }
-  // };
-
-  const startTransferGatewayFromEth = async () => {
-    console.log('startTransferGatewayFromEth');
+  const startTransferThresholdfromETH = async () => {
+    console.log('startTransferThresholdfromETH');
 
     const { WH_CHAIN_ID: sourceChainId, signer, walletAddress: sourceWalletAddress } = sourceWallet;
     const { WH_CHAIN_ID: targetChainId, walletAddress: targetWalletAddress } = targetWallet;
@@ -166,8 +107,8 @@ const TransferStep = () => {
     }
   };
 
-  const startTransferGatewayNoFromEth = async () => {
-    console.log('startTransferGatewayNoFromEth');
+  const startTransferThreshold = async () => {
+    console.log('startTransferThreshold');
 
     const { WH_CHAIN_ID: sourceChainId, signer, walletAddress: sourceWalletAddress } = sourceWallet;
     const { WH_CHAIN_ID: targetChainId, walletAddress: targetWalletAddress } = targetWallet;
@@ -238,7 +179,7 @@ const TransferStep = () => {
         text='Transfer'
         style='purple'
         className='w-full'
-        onClick={useThreshold ? startTransferGatewayNoFromEth : startTransferGatewayFromEth}
+        onClick={useThreshold ? startTransferThreshold : startTransferThresholdfromETH}
       />
     </div>
   );
