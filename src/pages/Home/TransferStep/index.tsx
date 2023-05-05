@@ -140,11 +140,7 @@ const TransferStep = () => {
 
       const receipt = await tx.wait();
 
-      // tx.logs.map((log) => contract.interface.parseLog(log))
-
       console.log({ receipt });
-
-      // return;
 
       const sequence = parseSequenceFromLogEth(receipt, getBridgeAddressForChain(sourceChainId));
       const emitterAddress = getEmitterAddressEth(getTokenBridgeAddressForChain(sourceChainId));

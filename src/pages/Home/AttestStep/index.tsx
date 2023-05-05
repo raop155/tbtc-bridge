@@ -1,6 +1,6 @@
 import { getTokenBridgeAddressForChain, THRESHOLD_TBTC_CONTRACTS } from '@/consts';
 import { sourceWalletAtom, targetWalletAtom } from '@/store/store';
-import { getForeignAssetEth, hexToUint8Array } from '@certusone/wormhole-sdk';
+import { getForeignAssetEth } from '@certusone/wormhole-sdk';
 import { ethers } from 'ethers';
 import { arrayify, zeroPad } from 'ethers/lib/utils.js';
 import { useAtom } from 'jotai';
