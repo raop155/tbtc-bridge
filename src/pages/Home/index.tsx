@@ -4,7 +4,6 @@ import {
   CHAIN_ID_POLYGON,
   CHAIN_ID_ARBITRUM,
   CHAIN_ID_OPTIMISM,
-  // CHAIN_ID_BSC,
 } from '@certusone/wormhole-sdk';
 import StepContainer from '@/components/StepContainer';
 import { useState } from 'react';
@@ -14,11 +13,11 @@ import TargetStep from './TargetStep';
 import TransferStep from './TransferStep';
 import RedeemStep from './RedeemStep';
 import AllowanceStep from './AllowanceStep';
+import AttestStep from './AttestStep';
 
 const items = [
   { id: CHAIN_ID_ETH, name: 'Ethereum', disabled: false },
   { id: CHAIN_ID_POLYGON, name: 'Polygon', disabled: false },
-  // { id: CHAIN_ID_BSC, name: 'Binance Smart Chain', disabled: false },
   { id: CHAIN_ID_ARBITRUM, name: 'Arbitrum', disabled: false },
   { id: CHAIN_ID_OPTIMISM, name: 'Optimism', disabled: false },
 ];
@@ -60,7 +59,7 @@ const Home = () => {
           </StepContainer>
 
           <StepContainer title='*. Attest Token'>
-            <div className='w-full'>Attest Token & Create Token {'{getForeignAssetEth()}'}</div>
+            <AttestStep />
           </StepContainer>
 
           <StepContainer title='*. Allowance'>

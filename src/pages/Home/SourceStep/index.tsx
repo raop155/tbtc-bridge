@@ -4,14 +4,11 @@ import Select from '@/components/Select';
 import Button from '@/components/Button';
 import { useChangeWallet, useWalletsForChain } from '@xlabs-libs/wallet-aggregator-react';
 import { useEVMWallet } from '@/hooks/useEVMWallet';
-import { getEvmChainId, getTokenBridgeAddressForChain } from '@/consts';
+import { getEvmChainId } from '@/consts';
 import { EVMWallet } from '@xlabs-libs/wallet-aggregator-evm';
 import { Wallet } from '@xlabs-libs/wallet-aggregator-core';
-import { ethers, BigNumber, Contract } from 'ethers';
-import { ERC20_ABI } from '@/ABI/ERC20';
-import { convertToNumber } from '@/utils/utils';
+import { ethers } from 'ethers';
 import { getDefaultNativeCurrencySymbol } from '@/consts';
-import { transferFromEth, transferFromEthNative } from '@certusone/wormhole-sdk';
 import { sourceTokenAtom, sourceWalletAtom } from '../../../store/store';
 import { useAtom } from 'jotai';
 
@@ -38,29 +35,6 @@ const SourceStep = ({ sourceChains, selectedSourceChain, setSelectedSourceChain 
 
   const walletsForChain = useWalletsForChain(WH_CHAIN_ID);
   const croppedAddress = `${walletAddress?.slice(0, 5) || ''}...${walletAddress?.slice(-4) || ''}`;
-
-  // useEffect(() => {
-  //   if (!provider || !walletAddress) return;
-
-  //   console.log({ walletAddress });
-
-  //   const getBalance = async () => {
-  //     const newContract = new Contract(
-  //       '0x494701CE895389d917a938f0ea202D4eB9684Eab',
-  //       ERC20_ABI,
-  //       provider,
-  //     );
-  //     console.log({ newContract });
-
-  //     const tokenBalancePromise: BigNumber = await newContract.balanceOf(walletAddress);
-  //     const decimals = await newContract.decimals();
-  //     const name = await newContract.name();
-  //     const symbol = await newContract.symbol();
-
-  //     console.log({ converttokenBalancePromise: convertToNumber(tokenBalancePromise, decimals) });
-  //   };
-  //   getBalance();
-  // }, [provider, walletAddress]);
 
   useEffect(() => {
     if (!wallet) return;

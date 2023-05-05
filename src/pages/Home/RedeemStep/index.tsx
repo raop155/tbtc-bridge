@@ -82,6 +82,9 @@ const RedeemStep = () => {
 
   return (
     <div className='w-full'>
+      <div className='mb-2 text-xs text-gray-400'>
+        * Has to manually change to the target chain to redeem
+      </div>
       <Button
         text='Redeem'
         style='purple'

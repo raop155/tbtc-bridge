@@ -175,6 +175,9 @@ const TransferStep = () => {
 
   return (
     <div className='w-full'>
+      <div className='mb-2 text-xs text-gray-400'>
+        * Has to manually change to the source chain to transfer (Usually you don't need to)
+      </div>
       <Button
         text='Transfer'
         style='purple'
